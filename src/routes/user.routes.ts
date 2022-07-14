@@ -10,12 +10,12 @@ userRouter
 .route("/")
 .get((req, res) => {
     const { minBooksCheckedOut } = req.query;
-    let filtered = users;
+    let filteredUsers = users;
     if (minBooksCheckedOut) {
-        filtered = filtered.filter(user => user.booksCheckedOut.length >= +minBooksCheckedOut);
+        filteredUsers = filteredUsers.filter(user => user.booksCheckedOut.length >= +minBooksCheckedOut);
     };
 
-    res.status(200).json(filtered);
+    res.status(200).json(filteredUsers);
 })
 .post((req, res) => {
     const newUser = {id: nanoid(5), ...req.body};
