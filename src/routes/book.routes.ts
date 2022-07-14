@@ -59,10 +59,7 @@ bookRouter.route("/:id")
 bookRouter.route("/:id/checkout/:userId")
 .patch((req, res) => {
     const book = books.find(book => book.id === req.params.id);
-    const bookIndex = books.findIndex(book => book.id === req.params.id);
-
     const user = users.find(user => user.id === req.params.userId);
-    const userIndex = users.findIndex(user => user.id === req.params.userId);
 
     if (book && user) {
         book.isCheckedOut = true;
@@ -70,5 +67,20 @@ bookRouter.route("/:id/checkout/:userId")
         res.json(book);
     }
     res.status(404).send(`Book with id ${req.params.id} or User with id ${req.params.userId} not found`);
+})
 
+bookRouter.route("/:id/checkin/:userId")
+.patch((req, res) => {
+    const book = books.find(book => book.id === req.params.id);
+    const user = users.find(user => user.id === req.params.userId);
+
+    if (book && user) {
+        if (book.isCheckedOut === true) {
+            book.isCheckedOut = false;
+            let bookIndex = user.booksCheckedOut.findIndex(book => book === req.params.id);
+            user.booksCheckedOut.splice(bookIndex, 1);
+        }
+        res.json(book);
+    }
+    res.status(404).send(`Book with id ${req.params.id} or User with id ${req.params.userId} not found`);
 })
